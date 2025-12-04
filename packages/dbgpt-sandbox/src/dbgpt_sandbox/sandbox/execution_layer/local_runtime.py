@@ -47,7 +47,7 @@ class LocalSandboxSession(SandboxSession):
             return True
 
         except Exception as e:
-            print(f"启动本地沙箱失败: {e}")
+            print(f"Failed to start local sandbox: {e}")
             return False
 
     def _setup_environment(self):
@@ -74,14 +74,14 @@ class LocalSandboxSession(SandboxSession):
             return True
 
         except Exception as e:
-            print(f"停止本地沙箱失败: {e}")
+            print(f"Failed to stop local sandbox: {e}")
             return False
 
     async def execute(self, code: str) -> ExecutionResult:
         """在本地进程中执行代码"""
         if not self._is_active or not self.work_dir:
             return ExecutionResult(
-                status=ExecutionStatus.ERROR, error="会话未启动或工作目录不存在"
+                status=ExecutionStatus.ERROR, error="Session not started or working directory does not exist"
             )
 
         self.update_last_accessed()
@@ -91,7 +91,7 @@ class LocalSandboxSession(SandboxSession):
         if warnings and any("危险操作" in w for w in warnings):
             return ExecutionResult(
                 status=ExecutionStatus.ERROR,
-                error=f"代码安全检查失败: {'; '.join(warnings)}",
+                error=f"Code security check failed: {'; '.join(warnings)}",
             )
 
         try:
@@ -120,11 +120,11 @@ class LocalSandboxSession(SandboxSession):
         except asyncio.TimeoutError:
             return ExecutionResult(
                 status=ExecutionStatus.TIMEOUT,
-                error=f"执行超时 ({self.config.timeout}秒)",
+                error=f"Execution timeout ({self.config.timeout} seconds)",
             )
         except Exception as e:
             return ExecutionResult(
-                status=ExecutionStatus.ERROR, error=f"执行失败: {str(e)}"
+                status=ExecutionStatus.ERROR, error=f"Execution failed: {str(e)}"
             )
         finally:
             if "code_file" in locals():
@@ -334,7 +334,7 @@ class LocalRuntime(SandboxRuntime):
     ) -> SandboxSession:
         """创建新的本地沙箱会话"""
         if session_id in self.sessions:
-            raise ValueError(f"会话 {session_id} 已存在")
+            raise ValueError(f"Session {session_id} already exists")
 
         session = LocalSandboxSession(session_id, config)
 
@@ -342,7 +342,7 @@ class LocalRuntime(SandboxRuntime):
             self.sessions[session_id] = session
             return session
         else:
-            raise RuntimeError(f"启动会话 {session_id} 失败")
+            raise RuntimeError(f"Failed to start session {session_id}")
 
     async def destroy_session(self, session_id: str) -> bool:
         """销毁本地沙箱会话"""

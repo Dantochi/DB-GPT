@@ -32,12 +32,12 @@ const Feedback: React.FC<{
     const result = copy(chatDialogRef.current?.textContent || pureStr);
     if (result) {
       if (pureStr) {
-        message.success('复制成功');
+        message.success('Copy successful');
       } else {
-        message.warning('内容复制为空');
+        message.warning('Copied content is empty');
       }
     } else {
-      message.error('复制失败');
+      message.error('Copy failed');
     }
   };
 
@@ -58,7 +58,7 @@ const Feedback: React.FC<{
       onSuccess: data => {
         const [, res] = data;
         setStatus(res?.feedback_type);
-        message.success('反馈成功');
+        message.success('Feedback successful');
         setFeedbackOpen(false);
       },
     },
@@ -73,7 +73,7 @@ const Feedback: React.FC<{
         const [, res] = data;
         if (res) {
           setStatus('none');
-          message.success('操作成功');
+          message.success('Operation successful');
         }
       },
     },
@@ -97,7 +97,7 @@ const Feedback: React.FC<{
     {
       manual: true,
       onSuccess: () => {
-        message.success('操作成功');
+        message.success('Operation successful');
       },
     },
   );

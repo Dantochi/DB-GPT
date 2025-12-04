@@ -92,7 +92,7 @@ class PathUtils:
         normalized_base = os.path.normpath(base_dir)
 
         if not normalized_path.startswith(normalized_base):
-            raise ValueError(f"不安全的路径: {path}")
+            raise ValueError(f"Unsafe path: {path}")
 
         return normalized_path
 
@@ -111,7 +111,7 @@ class PathUtils:
                 shutil.rmtree(directory)
             return True
         except Exception as e:
-            print(f"清理目录失败: {e}")
+            print(f"Failed to clean directory: {e}")
             return False
 
 
@@ -150,7 +150,7 @@ class ProcessManager:
 
             return True
         except Exception as e:
-            print(f"终止进程树失败: {e}")
+            print(f"Failed to terminate process tree: {e}")
             return False
 
     @staticmethod

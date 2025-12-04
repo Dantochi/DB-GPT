@@ -77,7 +77,7 @@ class DockerSandboxSession(SandboxSession):
             await self._setup_environment()
             return True
         except Exception as e:
-            print(f"启动 Docker 容器失败: {e}")
+            print(f"Failed to start Docker container: {e}")
             return False
 
     async def _setup_environment(self):
@@ -109,7 +109,7 @@ class DockerSandboxSession(SandboxSession):
             self._is_active = False
             return True
         except Exception as e:
-            print(f"停止 Docker 容器失败: {e}")
+            print(f"Failed to stop Docker container: {e}")
             return False
 
     async def install_dependencies(self, dependencies: List[str]) -> ExecutionResult:
@@ -120,7 +120,7 @@ class DockerSandboxSession(SandboxSession):
             )
         if not dependencies:
             return ExecutionResult(
-                status=ExecutionStatus.SUCCESS, output="无依赖需要安装", exit_code=0
+                status=ExecutionStatus.SUCCESS, output="No dependencies to install", exit_code=0
             )
 
         try:
@@ -136,7 +136,7 @@ class DockerSandboxSession(SandboxSession):
                     )
                     exit_code = res.exit_code
                     if res.exit_code != 0:
-                        errors.append(f"pip install {dep} 失败")
+                        errors.append(f"pip install {dep} failed")
                         break
                     else:
                         outputs.append(f"installed: {dep}")
@@ -154,7 +154,7 @@ class DockerSandboxSession(SandboxSession):
                 )
                 exit_code = res.exit_code
                 if res.exit_code != 0:
-                    errors.append("npm install 失败")
+                    errors.append("npm install failed")
                 else:
                     outputs.append(f"installed: {dep_str}")
             else:
@@ -187,7 +187,7 @@ class DockerSandboxSession(SandboxSession):
             return DisplayResult(
                 status="error",
                 output="",
-                error="容器未启动或已停止",
+                error="Container not started or already stopped",
                 execution_time=0,
                 exit_code=-1,
             )
@@ -391,7 +391,7 @@ class DockerRuntime(SandboxRuntime):
         self, session_id: str, config: SessionConfig
     ) -> SandboxSession:
         if session_id in self.sessions:
-            raise ValueError(f"会话 {session_id} 已存在")
+            raise ValueError(f"Session {session_id} already exists")
 
         session = DockerSandboxSession(session_id, config, self.docker_client)
 
@@ -399,7 +399,7 @@ class DockerRuntime(SandboxRuntime):
             self.sessions[session_id] = session
             return session
         else:
-            raise RuntimeError(f"启动会话 {session_id} 失败")
+            raise RuntimeError(f"Failed to start session {session_id}")
 
     async def destroy_session(self, session_id: str) -> bool:
         if session_id not in self.sessions:

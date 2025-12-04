@@ -43,7 +43,7 @@ class RuntimeFactory:
                 return NerdctlRuntime()
             if runtime_preference == "local":
                 return LocalRuntime()
-            raise RuntimeError(f"指定的运行时不可用: {runtime_preference}")
+            raise RuntimeError(f"Specified runtime is not available: {runtime_preference}")
 
         if EnvironmentDetector.is_docker_sdk_available():
             try:

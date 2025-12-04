@@ -289,7 +289,7 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('删除成功');
+                message.success('Delete successful');
                 getDataSetsRefresh();
               }
             }}
@@ -525,7 +525,7 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('删除成功');
+                message.success('Delete successful');
                 getEvaluationsRefresh();
               }
             }}
@@ -666,7 +666,7 @@ const Evaluation = () => {
                   }),
                 );
                 if (res?.success) {
-                  message.success('发起成功');
+                  message.success('Evaluation initiated successfully');
                   getEvaluationsRefresh();
                   form.resetFields();
                 }
@@ -779,15 +779,15 @@ const Evaluation = () => {
                     uploadDataSetsFile(formData)
                       .then(response => {
                         if (response.data.success) {
-                          message.success('上传成功');
+                          message.success('Upload successful');
                           runGetDataSets();
                         } else {
                           message.error(response.data.err_msg);
                         }
                       })
                       .catch(error => {
-                        console.error('上传失败', error);
-                        message.error(error?.response?.data?.err_msg || '上传失败');
+                        console.error('Upload failed', error);
+                        message.error(error?.response?.data?.err_msg || 'Upload failed');
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -801,7 +801,7 @@ const Evaluation = () => {
                     })
                       .then(res => {
                         if (res.data.success) {
-                          message.success('上传成功');
+                          message.success('Upload successful');
                           runGetDataSets();
                         } else {
                           message.error(res.data.err_msg);
@@ -809,7 +809,7 @@ const Evaluation = () => {
                       })
                       .catch(err => {
                         console.log(err);
-                        message.error(err?.response?.data?.err_msg || '上传失败');
+                        message.error(err?.response?.data?.err_msg || 'Upload failed');
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -824,7 +824,7 @@ const Evaluation = () => {
                   })
                     .then(res => {
                       if (res.data.success) {
-                        message.success('更新成功');
+                        message.success('Update successful');
                         runGetDataSets();
                       } else {
                         message.error(res.data.err_msg);
@@ -832,7 +832,7 @@ const Evaluation = () => {
                     })
                     .catch(err => {
                       console.log(err);
-                      message.error('更新失败');
+                      message.error('Update failed');
                     })
                     .finally(() => {
                       setIsDataSetModalOpen(false);

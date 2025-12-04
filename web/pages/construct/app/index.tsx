@@ -90,7 +90,7 @@ export default function AppContent() {
       manual: true,
       onSuccess: data => {
         if (data[2]?.success) {
-          message.success('操作成功');
+          message.success('Operation successful');
         }
         getListFiltered();
       },
@@ -230,7 +230,7 @@ export default function AppContent() {
     {
       manual: true,
       onSuccess: () => {
-        message.success('更新成功');
+        message.success('Update successful');
       },
     },
   );
@@ -265,9 +265,9 @@ export default function AppContent() {
       const dingDingUrl = `dingtalk://dingtalkclient/page/link?url=${encodeURIComponent(mobileUrl)}&pc_slide=true`;
       const result = copy(dingDingUrl);
       if (result) {
-        message.success('复制成功');
+        message.success('Copy successful');
       } else {
-        message.error('复制失败');
+        message.error('Copy failed');
       }
       setClickTimeout(null);
     }, 300); // 双击时间间隔

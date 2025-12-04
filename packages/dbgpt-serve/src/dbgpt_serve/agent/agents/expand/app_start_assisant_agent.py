@@ -77,7 +77,7 @@ class StartAppAssistantAgent(ConversableAgent):
         if rely_messages and len(rely_messages) > 0:
             return rely_messages[-1:], None
         else:
-            raise ValueError("没有可用的应用链接消息！")
+            raise ValueError("No available application link message!")
 
     async def thinking(
         self,

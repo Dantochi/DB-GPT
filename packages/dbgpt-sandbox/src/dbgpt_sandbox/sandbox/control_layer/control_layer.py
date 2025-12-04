@@ -68,24 +68,24 @@ class ControlLayer:
                 output=f"session {session.session_id} connected",
             )
         except Exception as e:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"连接失败: {e}")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"Connection failed: {e}")
 
     async def _handle_configure(self, task: TaskObject) -> ExecutionResult:
         """配置沙箱环境，例如安装依赖"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
 
         session_id = self.tasks[task.task_id]["session_id"]
         session = await self.runtime.get_session(session_id)
         if not session:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="会话不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Session does not exist")
 
         deps = task.config.get("dependencies", [])
         try:
             if not deps:
                 self.tasks[task.task_id]["status"] = "configured"
                 return ExecutionResult(
-                    status=ExecutionStatus.SUCCESS, output="无依赖需要安装"
+                    status=ExecutionStatus.SUCCESS, output="No dependencies to install"
                 )
             result = await session.install_dependencies(deps)
             self.tasks[task.task_id]["status"] = (
@@ -93,17 +93,17 @@ class ControlLayer:
             )
             return result
         except Exception as e:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"配置失败: {e}")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"Configuration failed: {e}")
 
     async def _handle_execute(self, task: TaskObject) -> ExecutionResult:
         """在沙箱中执行代码"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
 
         session_id = self.tasks[task.task_id]["session_id"]
         session = await self.runtime.get_session(session_id)
         if not session:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="会话不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Session does not exist")
 
         try:
             if task.language == "shell":
@@ -116,12 +116,12 @@ class ControlLayer:
             self.tasks[task.task_id]["result"] = result
             return result
         except Exception as e:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"执行失败: {e}")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error=f"Execution failed: {e}")
 
     async def _handle_manual(self, task: TaskObject) -> ExecutionResult:
         """进入手动操作模式（返回可连接的 URL 或 token）"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
         session_id = self.tasks[task.task_id]["session_id"]
         manual_url = f"http://sandbox-gui/{session_id}"
         self.tasks[task.task_id]["status"] = "manual"
@@ -130,25 +130,25 @@ class ControlLayer:
     async def _handle_disconnect(self, task: TaskObject) -> ExecutionResult:
         """停止并销毁沙箱会话"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
 
         session_id = self.tasks[task.task_id]["session_id"]
         success = await self.runtime.destroy_session(session_id)
         self.tasks[task.task_id]["status"] = "stopped" if success else "error"
         return ExecutionResult(
             status=ExecutionStatus.SUCCESS if success else ExecutionStatus.ERROR,
-            output="会话已销毁" if success else "会话销毁失败",
+            output="Session destroyed" if success else "Failed to destroy session",
         )
 
     async def _handle_status(self, task: TaskObject) -> ExecutionResult:
         """获取任务/会话状态"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
 
         session_id = self.tasks[task.task_id]["session_id"]
         session = await self.runtime.get_session(session_id)
         if not session:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="会话不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Session does not exist")
 
         status = await session.get_status()
         return ExecutionResult(status=ExecutionStatus.SUCCESS, output=str(status))
@@ -161,22 +161,22 @@ class ControlLayer:
     async def _handle_get_file(self, task: TaskObject) -> ExecutionResult:
         """获取沙箱内指定文件内容"""
         if task.task_id not in self.tasks:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="任务不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Task does not exist")
 
         session_id = self.tasks[task.task_id]["session_id"]
         session = await self.runtime.get_session(session_id)
         if not session:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="会话不存在")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Session does not exist")
 
         filename = task.file_name
 
         if not filename:
-            return ExecutionResult(status=ExecutionStatus.ERROR, error="未指定文件名")
+            return ExecutionResult(status=ExecutionStatus.ERROR, error="Filename not specified")
 
         try:
             content = await session.get_file_content(filename)
             return ExecutionResult(status=ExecutionStatus.SUCCESS, output=content)
         except Exception as e:
             return ExecutionResult(
-                status=ExecutionStatus.ERROR, error=f"获取文件失败: {e}"
+                status=ExecutionStatus.ERROR, error=f"Failed to get file: {e}"
             )

@@ -109,7 +109,7 @@ class PodmanSandboxSession(SandboxSession):
 
             code, out, err = await _run_cmd(args, timeout=60)
             if code != 0:
-                print_log("ERROR", f"Podman 启动失败: {err.strip()}")
+                print_log("ERROR", f"Podman startup failed: {err.strip()}")
                 return False
 
             self._is_active = True
@@ -130,7 +130,7 @@ class PodmanSandboxSession(SandboxSession):
                 )
             return True
         except Exception as e:
-            print_log("ERROR", f"启动 Podman 容器失败: {e}")
+            print_log("ERROR", f"Failed to start Podman container: {e}")
             return False
 
     async def stop(self) -> bool:
@@ -140,7 +140,7 @@ class PodmanSandboxSession(SandboxSession):
             self._is_active = False
             return True
         except Exception as e:
-            print_log("ERROR", f"停止 Podman 容器失败: {e}")
+            print_log("ERROR", f"Failed to stop Podman container: {e}")
             return False
 
     def _create_code_file(self, code: str) -> str:
@@ -178,11 +178,11 @@ class PodmanSandboxSession(SandboxSession):
         """通过 podman exec 安装 pip/npm 依赖。"""
         if not self._is_active:
             return ExecutionResult(
-                status=ExecutionStatus.ERROR, error="容器未启动", exit_code=-1
+                status=ExecutionStatus.ERROR, error="Container not started", exit_code=-1
             )
         if not dependencies:
             return ExecutionResult(
-                status=ExecutionStatus.SUCCESS, output="无依赖需要安装", exit_code=0
+                status=ExecutionStatus.SUCCESS, output="No dependencies to install", exit_code=0
             )
 
         try:
@@ -206,7 +206,7 @@ class PodmanSandboxSession(SandboxSession):
                     )
                     exit_code = code
                     if code != 0:
-                        errors.append(f"pip install {dep} 失败: {err.strip()}")
+                        errors.append(f"pip install {dep} failed: {err.strip()}")
                         break
                     outputs.append(f"installed: {dep}")
             elif self.config.language == "javascript":
@@ -240,7 +240,7 @@ class PodmanSandboxSession(SandboxSession):
                 )
                 exit_code = code
                 if code != 0:
-                    errors.append(f"npm install 失败: {err.strip()}")
+                    errors.append(f"npm install failed: {err.strip()}")
                 else:
                     outputs.append(f"installed: {dep_str}")
             else:
@@ -272,7 +272,7 @@ class PodmanSandboxSession(SandboxSession):
             return DisplayResult(
                 status="error",
                 output="",
-                error="容器未启动",
+                error="Container not started",
                 execution_time=0,
                 exit_code=-1,
             )
@@ -310,7 +310,7 @@ class PodmanSandboxSession(SandboxSession):
                 return DisplayResult(
                     status="error",
                     output="",
-                    error=f"拷贝文件失败: {cp_err}",
+                    error=f"Failed to copy file: {cp_err}",
                     execution_time=0,
                     exit_code=-1,
                 )
@@ -345,7 +345,7 @@ class PodmanSandboxSession(SandboxSession):
             return DisplayResult(
                 status="error",
                 output="",
-                error=f"执行超时({self.config.timeout}s)",
+                error=f"Execution timeout ({self.config.timeout}s)",
                 execution_time=self.config.timeout,
                 exit_code=124,
             )
@@ -402,11 +402,11 @@ class PodmanRuntime(SandboxRuntime):
         self, session_id: str, config: SessionConfig
     ) -> SandboxSession:
         if session_id in self.sessions:
-            raise ValueError(f"会话 {session_id} 已存在")
+            raise ValueError(f"Session {session_id} already exists")
         sess = PodmanSandboxSession(session_id, config)
         ok = await sess.start()
         if not ok:
-            raise RuntimeError(f"启动会话 {session_id} 失败")
+            raise RuntimeError(f"Failed to start session {session_id}")
         self.sessions[session_id] = sess
         return sess
 

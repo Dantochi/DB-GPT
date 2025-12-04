@@ -215,7 +215,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
         type = PromptType(prompt_type)
         if type == PromptType.AGENT:
             if not target:
-                raise ValueError("请选择一个Agent用来加载模版")
+                raise ValueError("Please select an Agent to load the template")
             agent_manage = get_agent_manager()
             target_agent_cls: Type[ConversableAgent] = agent_manage.get_by_name(target)
             target_agent = target_agent_cls()
@@ -228,7 +228,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
             )
         elif type == PromptType.SCENE:
             if not target:
-                raise ValueError("请选择一个场景用来加载模版")
+                raise ValueError("Please select a scene to load the template")
             from dbgpt._private.config import Config
 
             cfg = Config()
@@ -243,12 +243,12 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
                 for item in app_prompt.prompt.messages:
                     if isinstance(item, SystemPromptTemplate):
                         return item.prompt
-                raise ValueError(f"当前场景没有找到可用的Prompt模版，{target}")
+                raise ValueError(f"No available Prompt template found for current scene, {target}")
             except Exception:
-                raise ValueError(f"当前场景没有找到可用的Prompt模版，{target}")
+                raise ValueError(f"No available Prompt template found for current scene, {target}")
         elif type == PromptType.EVALUATE:
             if not target:
-                raise ValueError("请选择一个场景用来加载模版")
+                raise ValueError("Please select a scene to load the template")
             try:
                 from dbgpt.rag.evaluation.answer import (
                     LLMEvaluationMetric,
@@ -260,7 +260,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
                     if target == item.name
                 ]
                 if len(prompts) == 0:
-                    raise ValueError(f"当前场景没有找到可用的Prompt模版，{target}")
+                    raise ValueError(f"No available Prompt template found for current scene, {target}")
                 prompt = prompts[0]
                 return PromptTemplate(
                     template=prompt, input_variables=get_template_vars(prompt)
@@ -274,7 +274,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
     async def debug_prompt(self, debug_input: PromptDebugInput):
         logger.info(f"debug_prompt:{debug_input}")
         if not debug_input.user_input:
-            raise ValueError("请输入你的提问!")
+            raise ValueError("Please enter your question!")
         try:
             worker_manager = self._system_app.get_component(
                 ComponentType.WORKER_MANAGER_FACTORY, WorkerManagerFactory
@@ -339,7 +339,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
             #     payload["context"] = ModelRequestContext(extra=params["context"])
 
         except Exception as e:
-            raise ValueError("参数准备失败！" + str(e))
+            raise ValueError("Parameter preparation failed! " + str(e))
 
         try:
             model_request = ModelRequest(**payload)
@@ -378,7 +378,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
         if type == PromptType.AGENT:
             try:
                 if not target:
-                    raise ValueError("请选择一个Agent用来加载模版")
+                    raise ValueError("Please select an Agent to load the template")
                 from dbgpt.agent.core import agent_manage
 
                 target_agent_cls: Type[ConversableAgent] = agent_manage.get_by_name(
@@ -391,11 +391,11 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
                 )
 
             except Exception:
-                raise ValueError(f"模型返回不符合[{target}]输出定义，请调整prompt！")
+                raise ValueError(f"Model output does not match [{target}] output definition, please adjust the prompt!")
 
         elif type == PromptType.SCENE:
             if not target:
-                raise ValueError("请选择一个场景用来加载模版")
+                raise ValueError("Please select a scene to load the template")
             from dbgpt._private.config import Config
 
             cfg = Config()

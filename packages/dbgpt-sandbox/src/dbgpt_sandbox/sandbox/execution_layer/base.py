@@ -102,10 +102,10 @@ class SandboxSession(ABC):
         """
         if not dependencies:
             return ExecutionResult(
-                status=ExecutionStatus.SUCCESS, output="无依赖需要安装", exit_code=0
+                status=ExecutionStatus.SUCCESS, output="No dependencies to install", exit_code=0
             )
         return ExecutionResult(
-            status=ExecutionStatus.ERROR, error="依赖安装未实现", exit_code=1
+            status=ExecutionStatus.ERROR, error="Dependency installation not implemented", exit_code=1
         )
 
     def update_last_accessed(self):

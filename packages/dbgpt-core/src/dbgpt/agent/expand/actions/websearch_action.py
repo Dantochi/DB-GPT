@@ -176,9 +176,9 @@ def get_bing_search_results(query, num_results=5, worker=None):
         content_type = response.headers.get("Content-Type", "")
         if "text/html" not in content_type:
             logging.error(
-                f"搜索结果页面非HTML内容: {url}，Content-Type: {content_type}"
+                f"Search result page is not HTML content: {url}, Content-Type: {content_type}"
             )
-            raise Exception("搜索结果页面非HTML内容")
+            raise Exception("Search result page is not HTML content")
 
         detected = charset_normalizer.from_bytes(response.content).best()
         encoding = detected.encoding if detected and detected.encoding else "utf-8"
@@ -186,8 +186,8 @@ def get_bing_search_results(query, num_results=5, worker=None):
         text = response.content.decode(encoding, errors="replace")
         logging.info(f"检测到编码: {encoding}，Bing搜索结果页面URL: {url}")
     except Exception as e:
-        logging.error(f"请求或解码Bing搜索结果失败：{e}")
-        raise Exception(f"请求或解码Bing搜索结果失败：{e}")
+        logging.error(f"Failed to request or decode Bing search results: {e}")
+        raise Exception(f"Failed to request or decode Bing search results: {e}")
 
     soup = BeautifulSoup(text, "html.parser")
     processed_count = 0

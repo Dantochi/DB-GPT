@@ -135,7 +135,7 @@ class Service(BaseService[ServeEntity, ServeRequest, ServerResponse]):
 
     def cancel_feedback(self, request: ServeRequest) -> None:
         if not (request.conv_uid and request.message_id):
-            raise Exception("cancel feedback参数缺失异常.")
+            raise Exception("Missing required parameters for cancel feedback.")
 
         self.dao.delete(
             ServeRequest(

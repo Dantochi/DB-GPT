@@ -32,7 +32,7 @@ const DeleteBtn: React.FC<{ record: IPrompt; refresh: () => void }> = ({ record,
     {
       manual: true,
       onSuccess: async () => {
-        message.success('删除成功');
+        message.success('Delete successful');
         await refresh();
       },
     },

@@ -136,9 +136,9 @@ class I18N:
             # Installation command
             "install_all_extras": "# 安装所有可选功能:",
             "install_extras_for": "# 安装 {} 的 {} 功能:",
-            "package_not_in_workspace": "错误: 包 '{}' 不在工作区中或没有定义extras。",
-            "package_no_extras": "包 '{}' 没有定义extras。",
-            "extra_not_in_package": "错误: 包 '{}' 中没有名为 '{}' 的extra。",
+            "package_not_in_workspace": "Error: Package '{}' is not in workspace or has no extras defined.",
+            "package_no_extras": "Package '{}' has no extras defined.",
+            "extra_not_in_package": "Error: Package '{}' has no extra named '{}'.",
             "available_extras_in_package": "可用的extras: {}",
             # Interactive installation
             "welcome": "欢迎使用 DB-GPT 安装引导助手！",
@@ -160,7 +160,7 @@ class I18N:
             # Deployment command
             "available_presets": "可用的部署预设:",
             "specify_preset": "请指定部署预设名称，或使用 --list 查看所有预设",
-            "preset_not_found": "错误: 未找到预设 '{}'",
+            "preset_not_found": "Error: Preset '{}' not found",
             "available_presets_list": "可用的预设: {}",
             "using_preset": "使用预设 '{}' 生成部署命令",
             # Preset descriptions

@@ -47,20 +47,20 @@ def read_excel_headers_and_data(
     """
 
     if not Path(file_path).exists():
-        raise FileNotFoundError(f"文件不存在: {file_path}")
+        raise FileNotFoundError(f"File does not exist: {file_path}")
     if Path(file_path).suffix.lower() != ".xlsx":
-        raise ValueError(f"不支持的文件格式: {Path(file_path).suffix}，仅支持.xlsx")
+        raise ValueError(f"Unsupported file format: {Path(file_path).suffix}, only .xlsx is supported")
 
     try:
         df = pd.read_excel(
             file_path, sheet_name=0, engine="openpyxl", keep_default_na=False
         )
     except Exception as e:
-        raise RuntimeError(f"读取Excel失败: {str(e)}")
+        raise RuntimeError(f"Failed to read Excel: {str(e)}")
 
     headers = list(df.columns)
     if not headers:
-        raise ValueError("Excel文件没有表头信息（第一行为空）")
+        raise ValueError("Excel file has no header information (first row is empty)")
 
     total_data_rows = len(df)
     if read_rows in (None, 0):
@@ -68,7 +68,7 @@ def read_excel_headers_and_data(
     elif isinstance(read_rows, int) and read_rows > 0:
         target_rows = min(read_rows, total_data_rows)
     else:
-        raise ValueError(f"参数read_rows无效：{read_rows}，仅支持正整数、None或0")
+        raise ValueError(f"Invalid read_rows parameter: {read_rows}, only positive integers, None or 0 are supported")
 
     df_target = df.head(target_rows)
 
